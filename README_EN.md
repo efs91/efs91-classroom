@@ -24,8 +24,8 @@ Virtual classroom system with Docker containers for teaching Scratch and develop
 
 1. **Clone the repo**:
    ```bash
-   git clone <your-repo>
-   cd efs91_programmation
+   git clone https://github.com/efs91/efs91-classroom.git
+   cd efs91-classroom
    ```
 
 2. **Install dependencies**:
@@ -248,7 +248,7 @@ docker volume prune
 
 ## 📝 License
 
-[Your license here]
+GPL-3.0 License - see the [LICENSE](LICENSE) file for details.
 
 ## 🤝 Contributing
 

@@ -24,8 +24,8 @@ Système de classe virtuelle avec conteneurs Docker pour l'enseignement de Scrat
 
 1. **Cloner le repo** :
    ```bash
-   git clone <votre-repo>
-   cd efs91_programmation
+   git clone https://github.com/efs91/efs91-classroom.git
+   cd efs91-classroom
    ```
 
 2. **Installer les dépendances** :
@@ -248,7 +248,7 @@ docker volume prune
 
 ## 📝 Licence
 
-[Votre licence ici]
+GPL-3.0 License - voir le fichier [LICENSE](LICENSE) pour plus de détails.
 
 ## 🤝 Contribution
 
