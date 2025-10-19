@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tableau professeur</title>
+  <style>
+    body { font-family: sans-serif; margin:0; }
+    h1 { text-align:center; padding:10px; }
+    #sessions {
+      display: grid;
+      gap: 10px;
+      padding: 10px;
+    }
+    .session {
+      border:1px solid #ccc;
+      padding:5px;
+      text-align:center;
+      background:#fafafa;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+    }
+    .session a {
+      text-decoration:none;
+      font-weight:bold;
+      color:#333;
+      margin-bottom:5px;
+    }
+    iframe { border:none; width:100%; }
+    button { margin-top:5px; }
+    #reload { margin:10px; }
+  </style>
+</head>
+<body>
+  <h1>Sessions élèves</h1>
+  <button id="reload">↻ Rafraîchir la liste</button>
+  <div id="sessions"></div>
+
+  <script>
+    async function load(){
+      const res = await fetch('/sessions');
+      const list = await res.json();
+      const grid = document.getElementById('sessions');
+      grid.innerHTML = '';
+
+      const count = list.length;
+      let cols = 1;
+      if (count === 2) cols = 2;
+      else if (count === 3) cols = 3;
+      else if (count >= 4) cols = 4;
+      grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
+      list.forEach(s=>{
+        const wrap = document.createElement('div');
+        wrap.className = 'session';
+        wrap.id = s.id;
+
+        const a = document.createElement('a');
+        a.href = s.port ? `http://${location.hostname}:${s.port}` : '#';
+        a.target = '_blank';
+        a.textContent = s.name;
+
+        const iframe = document.createElement('iframe');
+        iframe.src = s.port ? `http://${location.hostname}:${s.port}` : '';
+        iframe.height = (count<=1? 700 : count===2? 500 : count===3? 400 : 300);
+
+        const btn = document.createElement('button');
+        btn.textContent = "Supprimer";
+        btn.onclick = async ()=>{
+          if(confirm(`Supprimer la session ${s.name} ?`)){
+            await fetch(`/session/${s.id}`, {method:'DELETE'});
+            wrap.remove(); // retire la vignette sans reload global
+          }
+        };
+
+        wrap.appendChild(a);
+        wrap.appendChild(iframe);
+        wrap.appendChild(btn);
+        grid.appendChild(wrap);
+      });
+    }
+
+    document.getElementById('reload').onclick = load;
+    // charge une fois au démarrage
+    load();
+  </script>
+</body>
+</html>

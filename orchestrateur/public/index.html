@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Connexion Scratch</title>
+  <style>
+    body { font-family: sans-serif; text-align:center; padding-top:50px; }
+    #loading {
+      display:none;
+      margin-top:20px;
+      font-size:18px;
+    }
+    .dots::after {
+      content: '...';
+      animation: dots 1s steps(3, end) infinite;
+    }
+    @keyframes dots {
+      0%, 20% { color: transparent; }
+      40% { color: black; }
+      60% { color: transparent; }
+      80%,100% { color: black; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Accès à votre session Scratch</h1>
+  <p>Entrez votre prénom :</p>
+  <input id="name" placeholder="Prénom" />
+  <button onclick="join()">Démarrer</button>
+
+  <div id="loading" class="dots">Création de votre session</div>
+
+  <script>
+    async function join() {
+      const name = document.getElementById('name').value.trim();
+      if(!name) return alert("Entrez votre prénom");
+      document.getElementById('loading').style.display='block';
+
+      try {
+        const res = await fetch('/session', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({name})
+        });
+        const data = await res.json();
+        if(data.url){
+          // petit délai visuel (le serveur attend déjà 2 s, mais on laisse l'anim finir)
+          setTimeout(()=>window.location = data.url, 500);
+        }else{
+          alert("Erreur: " + (data.error||'inconnue'));
+          document.getElementById('loading').style.display='none';
+        }
+      } catch(e) {
+        alert("Erreur réseau : "+e);
+        document.getElementById('loading').style.display='none';
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tableau professeur</title>
+  <style>
+    body { font-family: sans-serif; margin:0; }
+    h1 { text-align:center; padding:10px; }
+    #sessions {
+      display: grid;
+      gap: 10px;
+      padding: 10px;
+    }
+    .session {
+      border:1px solid #ccc;
+      padding:5px;
+      text-align:center;
+      background:#fafafa;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+    }
+    .session a {
+      text-decoration:none;
+      font-weight:bold;
+      color:#333;
+      margin-bottom:5px;
+    }
+    iframe { border:none; width:100%; }
+    button { margin-top:5px; }
+    #reload { margin:10px; }
+  </style>
+</head>
+<body>
+  <h1>Sessions élèves - Surveillance</h1>
+  <p style="text-align:center; margin:10px; padding:10px; background:#e3f2fd; border-radius:5px;">
+    📺 <strong>Mode surveillance :</strong> Vous voyez ce que font les élèves en temps réel.<br>
+    🖱️ <strong>Cliquez sur le nom</strong> pour prendre le contrôle (coupe leur connexion temporairement)<br>
+    🔄 L'élève peut actualiser sa page pour reprendre la main après votre intervention
+  </p>
+  <button id="reload">↻ Rafraîchir la liste</button>
+  <div id="sessions"></div>
+
+  <script>
+    async function load(){
+      const res = await fetch('/sessions');
+      const list = await res.json();
+      const grid = document.getElementById('sessions');
+      grid.innerHTML = '';
+
+      const count = list.length;
+      let cols = 1;
+      if (count === 2) cols = 2;
+      else if (count === 3) cols = 3;
+      else if (count >= 4) cols = 4;
+      grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
+      list.forEach(s=>{
+        const wrap = document.createElement('div');
+        wrap.className = 'session';
+        wrap.id = s.id;
+
+        const a = document.createElement('a');
+        a.href = s.url || '#';  // Lien pour prendre le contrôle complet
+        a.target = '_blank';
+        a.textContent = `🎯 ${s.name} (cliquer pour contrôler)`;
+        a.style.color = '#1976d2';
+        a.style.textDecoration = 'underline';
+
+        // Bouton pour voir en plein écran (observation uniquement)
+        const viewBtn = document.createElement('a');
+        viewBtn.href = (s.url || '') + '#shared';
+        viewBtn.target = '_blank';
+        viewBtn.textContent = `👁️ Voir ${s.name} en plein écran`;
+        viewBtn.style.color = '#2e7d32';
+        viewBtn.style.textDecoration = 'underline';
+        viewBtn.style.fontSize = '0.9em';
+        viewBtn.style.marginBottom = '5px';
+        viewBtn.style.display = 'block';
+
+        const iframe = document.createElement('iframe');
+        // Mode surveillance : ajouter #shared pour voir sans interférer
+        iframe.src = (s.url || '') + '#shared';
+        iframe.height = (count<=1? 700 : count===2? 500 : count===3? 400 : 300);
+        iframe.title = `Surveillance de ${s.name}`;
+
+        const btn = document.createElement('button');
+        btn.textContent = "Supprimer";
+        btn.onclick = async ()=>{
+          if(confirm(`Supprimer la session ${s.name} ?`)){
+            await fetch(`/session/${s.id}`, {method:'DELETE'});
+            wrap.remove(); // retire la vignette sans reload global
+          }
+        };
+
+        wrap.appendChild(a);
+        wrap.appendChild(viewBtn);
+        wrap.appendChild(iframe);
+        wrap.appendChild(btn);
+        grid.appendChild(wrap);
+      });
+    }
+
+    document.getElementById('reload').onclick = load;
+    // charge une fois au démarrage
+    load();
+  </script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EFS91 Classroom</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .app-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .app-button {
+            display: block;
+            padding: 30px 20px;
+            text-decoration: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .scratch {
+            background: linear-gradient(135deg, #FF6B35, #F7931E);
+        }
+        .vscode {
+            background: linear-gradient(135deg, #007ACC, #005A9F);
+        }
+        .app-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        .disabled {
+            opacity: 0.5;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+        .disabled:hover {
+            transform: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .countdown {
+            font-size: 0.9em;
+            margin-top: 5px;
+            color: rgba(255,255,255,0.8);
+        }
+        .pulse {
+            animation: pulse 0.6s ease-in-out;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .app-icon {
+            font-size: 2em;
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 EFS91 Classroom</h1>
+        <p>Choisissez votre environnement de travail :</p>
+        
+        <div class="app-grid">
+            <a href="https://scratch.mit.edu/projects/editor" class="app-button scratch" target="_blank">
+                <span class="app-icon">🎮</span>
+                SCRATCH
+            </a>
+            
+            <a href="http://localhost:8080" class="app-button vscode disabled" target="_blank" id="vscode-btn">
+                <span class="app-icon">💻</span>
+                <div>VS CODE</div>
+                <div class="countdown" id="countdown">Disponible dans 10s...</div>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Timer pour activer VS Code après 10 secondes
+        let countdown = 10;
+        const vscodeBtn = document.getElementById('vscode-btn');
+        const countdownEl = document.getElementById('countdown');
+        
+        const timer = setInterval(() => {
+            countdown--;
+            
+            if (countdown > 0) {
+                countdownEl.textContent = `Disponible dans ${countdown}s...`;
+            } else {
+                // Activer le bouton
+                vscodeBtn.classList.remove('disabled');
+                vscodeBtn.classList.add('pulse');
+                countdownEl.textContent = 'Prêt ! 🚀';
+                
+                // Retirer l'animation après 600ms
+                setTimeout(() => {
+                    vscodeBtn.classList.remove('pulse');
+                }, 600);
+                
+                clearInterval(timer);
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
