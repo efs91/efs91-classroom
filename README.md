@@ -8,7 +8,7 @@ Système de classe virtuelle avec conteneurs Docker pour l'enseignement de Scrat
 
 - **Sessions élèves individuelles** : Chaque élève a son propre environnement isolé
 - **Firefox + Scratch** : Accès direct à Scratch via navigateur
-- **VS Code intégré** : Éditeur de code web avec timer de 10 secondes
+- **VS Code intégré** : Éditeur de code (Python, C#, ...)
 - **Interface professeur** : Surveillance temps réel + prise de contrôle
 - **Clipboard fonctionnel** : Copier/coller entre applications
 - **Stockage persistant** : Les fichiers des élèves sont sauvegardés
