@@ -8,7 +8,7 @@ Virtual classroom system with Docker containers for teaching Scratch and develop
 
 - **Individual student sessions**: Each student has their own isolated environment
 - **Firefox + Scratch**: Direct access to Scratch through browser
-- **Integrated VS Code**: Web code editor with 10-second timer
+- **Integrated VS Code**: Web code editor (Python, C#, ..)
 - **Teacher interface**: Real-time monitoring + remote control
 - **Functional clipboard**: Copy/paste between applications
 - **Persistent storage**: Student files are automatically saved
